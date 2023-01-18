@@ -2,14 +2,16 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 
+
 # This function takes a date and a string representing the school as input
 # and returns a string containing the menu for the given date at the given school.
 def ruokalista(thedate, school):
-    # Format the date into a string in the format '{day}_{month}_{year}'
+    
+    # Format the date into a string in the format '{day}_{month}_{year}' 
     date1 = '{d.day}_{d.month}_{d.year}'.format(d=thedate)
 
-    # Replace the year 2022 with an empty string in the formatted date
-    date1 = date1.replace("2022", "")
+    # Replace the year with an empty string in the formatted date
+    date1 = date1.replace(str(datetime.date.today().year), "")
 
     # Get the HTML content for the given school from the website 'https://kouluruoka.fi/menu/'
     res = requests.get("https://kouluruoka.fi/menu/" + school)
@@ -67,9 +69,9 @@ def ruokalista(thedate, school):
     # Capitalize the first letter of each word in the food string
     food = food.title()
 
-    # Remove the last character from the food string if it is "S", " " or ","
+    # Remove the last character from the food string if it is "S", " ", "," or "N"
     for _ in range (6):
-        if food[-1] in ["S", " ",",,", ","]:
+        if food[-1] in ["S", " ",",,", ",", "N"]:
           food = food[:-1]
 
     # Add a period at the end of the food string
@@ -79,9 +81,9 @@ def ruokalista(thedate, school):
     print("")
     return food
 
-    # Get the current date 
+# Get the current date 
 today = (datetime.date.today())
 tomorrow = (datetime.date.today() + datetime.timedelta(days=1))
 
-# Call the ruokalista function to get the menu for today at the school 'espoo_olarinkoulu'
+# Call the ruokalista function to get the menu for today at the school. For example:'espoo_olarinkoulu'
 print(ruokalista(today, "espoo_olarinkoulu"))
